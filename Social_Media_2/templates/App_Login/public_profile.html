@@ -1,0 +1,217 @@
+{% extends 'navbar.html' %}
+{% block title_block %} {{ searched_user.username }} {% endblock title_block %}
+
+{% block css_block %}
+
+    <style>
+
+        .post-box-1{
+
+            width: 540px;
+            height: 555px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: auto;
+
+        }
+
+        .post-image-1{
+
+            height: 300px;
+            width: 470px;
+            margin: auto;
+        }
+
+        .post-image-1 img{
+
+            width: 100%;
+            height: 100%;
+        }
+
+        .thumbnil-box-1{
+
+            margin-top: 18px;
+        }
+
+        .container{
+
+            width: 92%;
+        }
+
+    </style>
+
+{% endblock css_block %}
+
+{% block body_block %}
+
+<div class="container">
+
+    <div class="row mt-5">
+
+        <div class="col-sm-5 col-md-5 col-lg-5">
+
+            {% if searched_user.user_profile.profile_pic %}
+
+                <img src="/media/{{ searched_user.user_profile.profile_pic }}" alt="/media/{{ searched_user.user_profile.profile_pic }}"  class="rounded-circle" height="230px" width="230px">
+            
+            {% else %}
+
+                <img src="/media/avatar-image.jpg" alt="/media/avatar-image.jpg" class="rounded-circle" height="230px" width="230px">
+            
+            
+            {% endif %}
+
+            <br>
+
+        </div>
+
+        <div class="col-sm-7 col-md-7 col-lg-7 mt-3">
+
+            <h3>
+                {{ searched_user.username }}
+                &nbsp;
+
+                {% if follow %}
+
+                <a href="{% url 'App_Login:follow' username=searched_user.username %}" class="btn btn-primary btn-md">Follow</a>
+
+                {% else %}
+
+                <a href="{% url 'App_Login:unfollow' username=searched_user.username %}" class="btn btn-primary btn-md">Unfollow</a>
+
+                {% endif %}
+
+            </h3> 
+
+            
+            <br>
+
+
+
+            <h4>
+                {% if searched_user.post_author.count == 1 %}
+                    {{ searched_user.post_author.count }} post &nbsp; &nbsp;
+
+                {% else %}
+
+                    {{ searched_user.post_author.count }} posts &nbsp; &nbsp;
+
+                {% endif %}
+            
+                {% if searched_user.user_following.count == 1 %}
+
+                    {{ searched_user.user_following.count }} follower &nbsp; &nbsp;
+
+                {% else %}
+
+                    {{ searched_user.user_following.count }} followers &nbsp; &nbsp; 
+
+                {% endif %}
+
+                {{ searched_user.user_follower.count }} following
+            
+            </h4>
+
+            <br>
+            <br>
+            
+            <h4>{{ searched_user.user_profile.full_name }}</h4>
+            
+            <br>
+
+            <h6>{{ searched_user.user_profile.description }}</h6>
+
+                        
+        </div>
+
+
+    </div>
+
+    <br>
+
+    {% if searched_user.post_author.count >= 1 %}
+
+            <hr>
+
+            <br>
+
+            <h3 class="text-center">Posts</h3>
+
+            <br>
+
+            {% for post in searched_user.post_author.all %}
+
+                
+                    <div class="post-box-1 my-3 bg-light shadow-sm">
+
+                        {% if searched_user.user_profile.profile_pic %}
+                        
+                            <img src="/media/{{ searched_user.user_profile.profile_pic }}" alt="/media/{{ searched_user.user_profile.profile_pic }}" class="rounded-circle" height="50px" width="50px">
+                        
+                        {% else %}
+
+                            <img src="/media/avatar-image.jpg" alt="/media/avatar-image.jpg" class="rounded-circle" height="50px" width="50px">
+                        
+                        {% endif %}
+                        &nbsp;
+
+                        <h6 class="mt-2">{{ searched_user.user_profile.full_name }}</h6>
+                        
+
+                        <div class="post-image-1 mt-3">
+                            
+                            <p>{{ post.caption }}</p>
+
+                            <img src="/media/{{ post.post_image }}" alt="/media/{{ post.post_image }}">
+
+                            <div class="thumbnil-box-1">
+
+                                {% if post.pk not in liked_post_list %}
+
+                                    <a href="{% url 'App_Post:liked' pk=post.pk %}"><i class="fa-regular fa-thumbs-up"></i></a>
+            
+                                {% else %}
+            
+                                    <a href="{% url 'App_Post:unliked' pk=post.pk %}"><i class="fa-solid fa-thumbs-up"></i></a>
+            
+                                {% endif %}
+
+                                &nbsp;
+                                
+                                <a href="{% url 'App_Post:post_details' pk=post.pk %}" class="text-decoration-none">see more....</a>
+
+                                <p class="mt-3">
+
+                                    {% if post.liked_post.count == 1 %}
+                        
+                                        {{ post.liked_post.count }} like
+            
+                                    {% else %}
+            
+                                        {{ post.liked_post.count }} likes
+                                
+                                    {% endif %}
+
+                                </p>
+
+                                
+        
+                            </div>
+
+
+                        </div>
+
+                    
+                    </div>
+
+                    <br>
+                    
+
+            {% endfor %}
+        
+        {% endif %}
+
+
+</div>
+
+{% endblock body_block %}

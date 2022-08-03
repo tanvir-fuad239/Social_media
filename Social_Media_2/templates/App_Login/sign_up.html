@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title_block %} Create New User {% endblock title_block %}
+
+{% block body_block %}
+
+
+
+
+<center>
+
+<div class="sign_up">
+
+<h3 class="my-3">Sign up to see the photos of your friends</h3>
+
+<form  method="POST">
+
+    {{ form|crispy }}
+    {% csrf_token %}
+
+    <input type="submit" value="Sign Up" class="btn btn-primary btn-md mt-3 w-100">
+
+  
+
+</form>
+
+</div>
+
+<div class="log-in my-2">
+    <p>Already have an account? <a href="{% url 'App_Login:login' %}" class="text-decoration-none">Log in</a></p>
+</div>
+
+</center>
+
+{% endblock body_block %}

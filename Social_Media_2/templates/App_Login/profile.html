@@ -1,0 +1,245 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% block title_block %}  profile : {{ title }}  {% endblock title_block %}    
+
+
+{% block css_block %}
+
+    <style>
+
+        .edit-margin{
+            
+            margin-left: 68px;
+
+        }
+
+        .post-box{
+
+            width: 540px;
+            height: 535px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: auto;
+
+        }
+
+        .post-image{
+
+            height: 300px;
+            width: 470px;
+            margin: auto;
+        }
+
+        .post-image img{
+
+            width: 100%;
+            height: 100%;
+        }
+
+        .post-image-delete{
+
+            margin-left: 363px;
+            margin-top: 20px;
+
+        }
+
+        .container{
+
+            width: 92%;
+        }
+
+    </style>
+
+{% endblock css_block %}
+
+{% block body_block %}
+
+
+<div class="container">
+
+
+    <div class="row mt-5">
+
+        <div class="col-sm-5 col-md-5 col-lg-5">
+
+            {% if user.user_profile.profile_pic %}
+
+                <img src="/media/{{ user.user_profile.profile_pic }}" alt="/media/{{ user.user_profile.profile_pic }}"  class="rounded-circle" height="230px" width="230px">
+            
+            {% else %}
+
+                <img src="/media/avatar-image.jpg" alt="/media/avatar-image.jpg" class="rounded-circle" height="230px" width="230px">
+            
+            
+            {% endif %}
+
+            <br>
+
+            <a href="{% url 'App_Login:edit_user_profile' %}" class="btn btn-light btn-md border border-2 mt-3 edit-margin">Edit profile</a>
+
+        </div>
+
+        <div class="col-sm-7 col-md-7 col-lg-7 mt-3">
+
+            <h3>{{ user.username }} &nbsp; <a href="{% url 'App_Login:change_settings' %}" class="btn btn-light btn-sm border border-2">Change settings</a></h3>
+            
+            <br>
+
+
+
+            <h4>
+                {% if user.post_author.count == 1 %}
+                    {{ user.post_author.count }} post &nbsp; &nbsp;
+
+                {% else %}
+
+                    {{ user.post_author.count }} posts &nbsp; &nbsp;
+
+                {% endif %}
+               
+                {% if user.user_following.count == 1 %}
+
+                    {{ user.user_following.count }} follower &nbsp; &nbsp;
+
+                {% else %}
+
+                    {{ user.user_following.count }} followers &nbsp; &nbsp; 
+
+                {% endif %}
+
+                {{ user.user_follower.count }} following
+            
+            </h4>
+
+            <br>
+            <br>
+            
+            <h4>{{ user.user_profile.full_name }}</h4>
+            
+            <br>
+
+            <h6>{{ user.user_profile.description }}</h6>
+
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Create post
+            </button>
+
+
+  
+            <!-- Modal starts here -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create your post</h5>
+                </div>
+
+                    <div class="modal-body">
+                      
+                        <form  enctype="multipart/form-data" method="POST">
+
+                            {{ form|crispy }}
+                            {% csrf_token %}
+
+                            <input type="submit" value="Post" class="btn btn-primary btn-md mt-3">
+                            <a href="{% url 'App_Post:home' %}" class="btn btn-light btn-md mt-3 border border-1 ms-2">cancel</a>
+
+                        </form>
+
+                    </div>
+
+                    
+                    
+                </div>
+                </div>
+            </div>
+
+            <!-- Modal ends here -->
+
+
+                        
+        </div>
+
+
+    </div>
+
+    <br>
+    <br>
+
+    {% if user.post_author.count >= 1 %}
+
+        <hr>
+
+        <br>
+
+        <h3 class="text-center">Your posts</h3>
+
+        <br>
+
+        {% for post in user.post_author.all %}
+
+            
+                <div class="post-box my-3 bg-light shadow-sm">
+
+                    {% if user.user_profile.profile_pic %}
+                    
+                        <img src="/media/{{ user.user_profile.profile_pic }}" alt="/media/{{ user.user_profile.profile_pic }}" class="rounded-circle" height="50px" width="50px">
+                    
+                    {% else %}
+
+                        <img src="/media/avatar-image.jpg" alt="/media/avatar-image.jpg" class="rounded-circle" height="50px" width="50px">
+                    
+                    {% endif %}
+                    &nbsp;
+
+                    <h6 class="mt-2">{{ user.user_profile.full_name }}</h6>
+                    
+
+                    <div class="post-image mt-3">
+                        
+                        <p>{{ post.caption }}</p>
+
+                        <img src="/media/{{ post.post_image }}" alt="/media/{{ post.post_image }}">
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-danger post-image-delete" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                            Delete post
+                        </button>
+  
+                        <!-- Modal starts here -->
+                        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Are you sure to delete this post?</h5>
+                                </div>
+                                <div class="modal-body">
+
+                                    <a href="{% url 'App_Post:delete_post' pk=post.pk %}" class="btn btn-danger btn-md mt-3">Delete</a>
+                                    <a href="{% url 'App_Login:user_profile' %}" class="btn btn-light btn-md border border-1 mt-3 ms-2">cancel</a>
+                                </div>
+
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal ends here -->
+
+
+                    </div>
+
+
+                </div>
+
+                <br>
+                
+
+        {% endfor %}
+    
+    {% endif %}
+
+</div>
+
+{% endblock body_block %}

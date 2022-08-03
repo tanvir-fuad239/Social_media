@@ -1,0 +1,64 @@
+{% extends 'navbar.html' %}
+{% block title_block %} Search user {% endblock title_block %}
+
+{% block body_block %}
+
+    {% if search_key %}
+
+        {% if searching_value %}
+
+            
+            <div class="mt-4">
+                
+                {% for each_user in searching_value %}
+
+                            <div class="row">
+
+                                    <div class="col-sm-3 col-md-3 col-lg-3 mt-4">
+
+                                        {% if each_user.user_profile.profile_pic %}
+                                        
+                                            <img src="/media/{{ each_user.user_profile.profile_pic }}" alt="/media/{{ each_user.user_profile.profile_pic }}" height="70px" width="70px" class="rounded-circle">
+
+                                        {% else %}
+
+                                            <img src="/media/avatar-image.jpg" alt="/media/avatar-image.jpg" height="70px" width="70px" class="rounded-circle">
+                                        
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div class="col-sm-3 col-md-3 col-lg-3 mt-4">
+
+                                        <p>{{ each_user.user_profile.full_name }}</p>
+                                        <a href="{% url 'App_Login:public_user_profile' username=each_user.username %}" class="text-decoration-none">@{{ each_user.username }}</a>
+
+                                    </div>   
+
+                            </div>
+
+                        
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <ul>
+                <li>no such user.</li>
+            </ul>
+        
+        {% endif %}
+
+    {% else %}
+
+        <ul>
+            <li>please type username.</li>
+        </ul>
+
+    
+    {% endif %}
+
+
+{% endblock body_block %}
+

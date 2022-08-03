@@ -1,0 +1,46 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% block title_block %} Edit Profile : {{ title }} {% endblock title_block %}
+
+{% block css_block %}
+
+    <style>
+
+        .edit-profile{
+
+            width: 90%;
+            margin: auto;
+            margin-top: 30px;
+            padding: 30px;
+            border: 1px solid #ccc;
+    
+        }
+    
+
+    </style>
+
+{% endblock css_block %}
+
+{% block body_block %}
+
+<div class="edit-profile shadow-sm">
+
+    <h3 class="text-center">Edit your profile</h3>
+
+    <form  enctype="multipart/form-data" method="post">
+
+        {{ form|crispy }}
+        {% csrf_token %}
+
+        <input type="submit" value="Edit" class="btn btn-success btn-md mt-3">
+        <a href="{% url 'App_Login:user_profile' %}" class="btn btn-light  mt-3 ms-2 border border-1">cancel</a>
+
+    </form>
+
+</div>
+
+<br>
+<br>
+ 
+
+{% endblock body_block %}
